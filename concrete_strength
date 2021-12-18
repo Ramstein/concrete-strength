@@ -1,0 +1,37 @@
+{
+  "version": "1.0.0",
+  "cells": [
+    {
+      "type": "cs",
+      "input": "importFiles"
+    },
+    {
+      "type": "cs",
+      "input": "importFiles [ \"C:\\\\Users\\\\Administrator\\\\Downloads\\\\Concrete_Data.csv\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "setupParse source_frames: [ \"nfs:\\\\C:\\\\Users\\\\Administrator\\\\Downloads\\\\Concrete_Data.csv\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "parseFiles\n  source_frames: [\"nfs:\\\\C:\\\\Users\\\\Administrator\\\\Downloads\\\\Concrete_Data.csv\"]\n  destination_frame: \"Concrete_Data.hex\"\n  parse_type: \"CSV\"\n  separator: 44\n  number_columns: 9\n  single_quotes: false\n  column_names: [\"Cement (component 1)(kg in a m^3 mixture)\",\"Blast Furnace Slag (component 2)(kg in a m^3 mixture)\",\"Fly Ash (component 3)(kg in a m^3 mixture)\",\"Water  (component 4)(kg in a m^3 mixture)\",\"Superplasticizer (component 5)(kg in a m^3 mixture)\",\"Coarse Aggregate  (component 6)(kg in a m^3 mixture)\",\"Fine Aggregate (component 7)(kg in a m^3 mixture)\",\"Age (day)\",\"Concrete compressive strength(MPa, megapascals) \"]\n  column_types: [\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\"]\n  delete_on_done: true\n  check_header: 1\n  chunk_size: 4194304\n  escapechar: undefined"
+    },
+    {
+      "type": "cs",
+      "input": "getFrameSummary \"Concrete_Data.hex\""
+    },
+    {
+      "type": "cs",
+      "input": "assist runAutoML, training_frame: \"Concrete_Data.hex\""
+    },
+    {
+      "type": "cs",
+      "input": "runAutoML {\"build_control\":{\"project_name\":\"concrete_strength_1\",\"nfolds\":5,\"balance_classes\":false,\"stopping_criteria\":{\"seed\":-1,\"max_models\":0,\"max_runtime_secs\":900,\"max_runtime_secs_per_model\":0,\"stopping_rounds\":3,\"stopping_metric\":\"AUTO\",\"stopping_tolerance\":-1},\"keep_cross_validation_predictions\":true,\"keep_cross_validation_models\":true,\"keep_cross_validation_fold_assignment\":false,\"export_checkpoints_dir\":\"C:\\\\Users\\\\Administrator\\\\Downloads\\\\concrete_strength\\\\chk\"},\"input_spec\":{\"training_frame\":\"Concrete_Data.hex\",\"response_column\":\"Concrete compressive strength(MPa, megapascals) \",\"ignored_columns\":[],\"sort_metric\":\"AUTO\"},\"build_models\":{\"exclude_algos\":[\"GLM\",\"DRF\"],\"exploitation_ratio\":-1,\"monotone_constraints\":[]}}, 'exec'"
+    },
+    {
+      "type": "cs",
+      "input": "getLeaderboard \"concrete_strength_1@@Concrete_compressive_strength_MPa__megapascals__\""
+    }
+  ]
+}

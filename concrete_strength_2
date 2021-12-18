@@ -1,0 +1,109 @@
+{
+  "version": "1.0.0",
+  "cells": [
+    {
+      "type": "cs",
+      "input": "importFiles [ \"C:\\\\Users\\\\Administrator\\\\Downloads\\\\Concrete_Data.csv\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "setupParse source_frames: [ \"nfs:\\\\C:\\\\Users\\\\Administrator\\\\Downloads\\\\Concrete_Data.csv\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "parseFiles\n  source_frames: [\"nfs:\\\\C:\\\\Users\\\\Administrator\\\\Downloads\\\\Concrete_Data.csv\"]\n  destination_frame: \"Concrete_Data.hex\"\n  parse_type: \"CSV\"\n  separator: 44\n  number_columns: 9\n  single_quotes: false\n  column_names: [\"Cement (component 1)(kg in a m^3 mixture)\",\"Blast Furnace Slag (component 2)(kg in a m^3 mixture)\",\"Fly Ash (component 3)(kg in a m^3 mixture)\",\"Water  (component 4)(kg in a m^3 mixture)\",\"Superplasticizer (component 5)(kg in a m^3 mixture)\",\"Coarse Aggregate  (component 6)(kg in a m^3 mixture)\",\"Fine Aggregate (component 7)(kg in a m^3 mixture)\",\"Age (day)\",\"Concrete compressive strength(MPa, megapascals) \"]\n  column_types: [\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\"]\n  delete_on_done: true\n  check_header: 1\n  chunk_size: 4194304\n  escapechar: undefined"
+    },
+    {
+      "type": "cs",
+      "input": "getFrameSummary \"Concrete_Data.hex\""
+    },
+    {
+      "type": "cs",
+      "input": "splitFrame"
+    },
+    {
+      "type": "cs",
+      "input": "splitFrame \"Concrete_Data.hex\", [0.75], [\"frame_0.750\",\"frame_0.250\"], 523916"
+    },
+    {
+      "type": "cs",
+      "input": "buildModel \"gbm\""
+    },
+    {
+      "type": "cs",
+      "input": "buildModel 'gbm', {\"model_id\":\"concrete_strength_gbm-720cc9fb-4ab2-4a52-acfe-1b125dcc7628\",\"training_frame\":\"frame_0.750\",\"validation_frame\":\"frame_0.250\",\"nfolds\":5,\"response_column\":\"Concrete compressive strength(MPa, megapascals) \",\"ignored_columns\":[],\"ignore_const_cols\":true,\"ntrees\":50,\"max_depth\":5,\"min_rows\":10,\"nbins\":20,\"seed\":-1,\"learn_rate\":0.1,\"sample_rate\":1,\"col_sample_rate\":1,\"score_each_iteration\":false,\"score_tree_interval\":0,\"fold_assignment\":\"AUTO\",\"nbins_top_level\":1024,\"nbins_cats\":1024,\"r2_stopping\":1.7976931348623157e+308,\"stopping_rounds\":0,\"stopping_metric\":\"AUTO\",\"stopping_tolerance\":0.001,\"max_runtime_secs\":0,\"learn_rate_annealing\":1,\"distribution\":\"AUTO\",\"huber_alpha\":0.9,\"col_sample_rate_per_tree\":1,\"min_split_improvement\":0.00001,\"histogram_type\":\"AUTO\",\"categorical_encoding\":\"AUTO\",\"monotone_constraints\":[],\"gainslift_bins\":-1,\"auc_type\":\"AUTO\",\"keep_cross_validation_models\":true,\"keep_cross_validation_predictions\":false,\"keep_cross_validation_fold_assignment\":false,\"build_tree_one_node\":false,\"sample_rate_per_class\":[],\"col_sample_rate_change_per_level\":1,\"max_abs_leafnode_pred\":1.7976931348623157e+308,\"pred_noise_bandwidth\":0,\"calibrate_model\":false,\"check_constant_response\":true}"
+    },
+    {
+      "type": "cs",
+      "input": "getModel \"concrete_strength_gbm-720cc9fb-4ab2-4a52-acfe-1b125dcc7628\""
+    },
+    {
+      "type": "cs",
+      "input": "importFiles"
+    },
+    {
+      "type": "cs",
+      "input": "importFiles [ \"C:\\\\Users\\\\Administrator\\\\Downloads\\\\Concrete_Data_Predict.csv\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "setupParse source_frames: [ \"nfs:\\\\C:\\\\Users\\\\Administrator\\\\Downloads\\\\Concrete_Data_Predict.csv\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "parseFiles\n  source_frames: [\"nfs:\\\\C:\\\\Users\\\\Administrator\\\\Downloads\\\\Concrete_Data_Predict.csv\"]\n  destination_frame: \"Concrete_Data_Predict.hex\"\n  parse_type: \"CSV\"\n  separator: 44\n  number_columns: 8\n  single_quotes: false\n  column_names: [\"Cement (component 1)(kg in a m^3 mixture)\",\"Blast Furnace Slag (component 2)(kg in a m^3 mixture)\",\"Fly Ash (component 3)(kg in a m^3 mixture)\",\"Water  (component 4)(kg in a m^3 mixture)\",\"Superplasticizer (component 5)(kg in a m^3 mixture)\",\"Coarse Aggregate  (component 6)(kg in a m^3 mixture)\",\"Fine Aggregate (component 7)(kg in a m^3 mixture)\",\"Age (day)\"]\n  column_types: [\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\"]\n  delete_on_done: true\n  check_header: 1\n  chunk_size: 4194304\n  escapechar: undefined"
+    },
+    {
+      "type": "cs",
+      "input": "getFrameSummary \"Concrete_Data_Predict.hex\""
+    },
+    {
+      "type": "cs",
+      "input": "predict frame: \"Concrete_Data_Predict.hex\""
+    },
+    {
+      "type": "cs",
+      "input": "predict model: \"concrete_strength_gbm-720cc9fb-4ab2-4a52-acfe-1b125dcc7628\", frame: \"Concrete_Data_Predict.hex\", predictions_frame: \"cs_prediction-b9a9c491-0e8e-42f3-a998-395106a15101\""
+    },
+    {
+      "type": "cs",
+      "input": "bindFrames \"combined-cs_prediction-b9a9c491-0e8e-42f3-a998-395106a15101\", [ \"cs_prediction-b9a9c491-0e8e-42f3-a998-395106a15101\", \"Concrete_Data_Predict.hex\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "getFrameData \"combined-cs_prediction-b9a9c491-0e8e-42f3-a998-395106a15101\""
+    },
+    {
+      "type": "cs",
+      "input": "importModel"
+    },
+    {
+      "type": "cs",
+      "input": "importModel \"C:\\\\Users\\\\Administrator\\\\Downloads\\\\concrete_strength\\\\chk\\\\StackedEnsemble_AllModels_6_AutoML_1_20211208_174824\", overwrite: false"
+    },
+    {
+      "type": "cs",
+      "input": "getModel \"StackedEnsemble_AllModels_6_AutoML_1_20211208_174824\""
+    },
+    {
+      "type": "cs",
+      "input": "predict model: \"StackedEnsemble_AllModels_6_AutoML_1_20211208_174824\""
+    },
+    {
+      "type": "cs",
+      "input": "predict model: \"StackedEnsemble_AllModels_6_AutoML_1_20211208_174824\", frame: \"Concrete_Data_Predict.hex\", predictions_frame: \"stacked_cs_prediction-ba8a4ca3-778a-4f28-9a8f-e2497e3aa0ee\""
+    },
+    {
+      "type": "cs",
+      "input": "bindFrames \"combined-stacked_cs_prediction-ba8a4ca3-778a-4f28-9a8f-e2497e3aa0ee\", [ \"stacked_cs_prediction-ba8a4ca3-778a-4f28-9a8f-e2497e3aa0ee\", \"Concrete_Data_Predict.hex\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "getFrameSummary \"combined-stacked_cs_prediction-ba8a4ca3-778a-4f28-9a8f-e2497e3aa0ee\""
+    },
+    {
+      "type": "cs",
+      "input": "getFrameData \"combined-stacked_cs_prediction-ba8a4ca3-778a-4f28-9a8f-e2497e3aa0ee\""
+    }
+  ]
+}
